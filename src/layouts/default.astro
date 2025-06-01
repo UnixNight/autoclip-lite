@@ -1,0 +1,33 @@
+---
+import '@fontsource-variable/raleway/wght-italic.css'
+import '@fontsource-variable/raleway/wght.css'
+import Favicon from '~/assets/favicon.ico'
+import '~/assets/global.css'
+---
+
+<!doctype html>
+<html lang="en" class="[@media(max-height:800px)]:text-[75%]">
+  <head>
+    <title>Autoclip by FugiTech</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href={Favicon} />
+    <script is:inline src="https://player.twitch.tv/js/embed/v1.js" async defer></script>
+
+    <style is:global>
+      .prose *:has(+ ul),
+      .prose *:has(+ ol) {
+        margin-bottom: 0 !important;
+      }
+      .prose ul,
+      .prose ol {
+        margin-top: 0 !important;
+      }
+    </style>
+  </head>
+  <body class="flex min-h-screen flex-col items-center bg-neutral-900 text-neutral-100">
+    <main class="flex w-full flex-auto flex-col">
+      <slot />
+    </main>
+  </body>
+</html>

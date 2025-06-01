@@ -1,0 +1,21 @@
+---
+import { Channel } from '~/components/channel'
+import DefaultLayout from '~/layouts/default.astro'
+import { transformer } from '~/server/trpc.transformer'
+import { TwitchUserByLogin, TwitchVideosForUser } from '~/server/twitchapi'
+
+if (!Astro.params.channelName) {
+  return new Response('', { status: 404 })
+}
+
+const user = await TwitchUserByLogin(Astro.params.channelName)
+if (!user) {
+  return new Response('', { status: 404 })
+}
+
+const videos = transformer.output.serialize(await TwitchVideosForUser(user.id))
+---
+
+<DefaultLayout>
+  <Channel user={user} videos={videos} client:only="solid-js" />
+</DefaultLayout>

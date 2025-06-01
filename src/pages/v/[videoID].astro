@@ -1,0 +1,12 @@
+---
+import DefaultLayout from '~/layouts/default.astro'
+import { Video } from '~/components/video'
+
+if (!Astro.params.videoID) {
+  return new Response('', { status: 404 })
+}
+---
+
+<DefaultLayout>
+  <Video videoID={Astro.params.videoID} client:only="solid-js" />
+</DefaultLayout>

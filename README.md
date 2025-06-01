@@ -1,48 +1,22 @@
-# Astro Starter Kit: Basics
+# Autoclip Lite by FugiTech
 
-```sh
-npm create astro@latest -- --template basics
-```
+As part of shutting down Autoclip I am releasing most of its code as a completely working standalone project, to hopefully tide over technically-minded users. As a reminder, I am shutting down Autoclip because it does not meet my quality standards, and likewise this codebase (which has not been updated or significantly modified from the production code) is something I'd consider sub-par. Please do not judge me for the quality of the code, nor take the code here as good examples to learn from.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+**This codebase is provided as-is and I will not offer any support to those looking to use or modify it. I am not liable for anything that happens to you or your property from downloading or running this code.**
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+This is most of the production code for Autoclip with the following pieces removed:
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- Google login, since if you're running it then you're the only user
+- Stripe payments, since paywalls don't make sense
+- Highlight downloads, since it relies on ffmpeg which ran on a seperate server and I didn't feel like porting it over
 
-## 🚀 Project Structure
+## Running the codebase
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+0. Know the basics of how to use a terminal. If you've never run code in a terminal before, please find another tool. I will not help you.
+1. Download/Clone this codebase to your computer
+2. Run `npm install`
+3. Sign up for a Twitch developer account at https://dev.twitch.tv/
+4. Create an application and get a Client ID and Client Secret
+5. Open `.env` and fill out the client ID and secret you got previously
+6. Run `npm run dev` to start a development server. Since you're just running this for yourself that should be good enough.
+7. It'll give you a URL to open, likely http://localhost:4321 - open that to use Autoclip Lite
