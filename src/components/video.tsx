@@ -21,7 +21,7 @@ import { workerClient } from '~/server/workerlib'
 import { Header } from './header'
 import { Logo } from './icons'
 import type { ApiChart, ApiEmote, ChartData } from './types'
-import { Input, Select } from './ui'
+import { Button, Input, Select } from './ui'
 import { cn } from './utils'
 
 ChartJS.defaults.backgroundColor = 'rgba(255,255,255,0.1)'
@@ -191,6 +191,13 @@ const Highlights = (props: { class?: string }) => {
     })),
   )
 
+  const downloadLink = createMemo(() => {
+    return `/clip?d=${JSON.stringify({
+      video: a.videoID,
+      highlights: a.processed()?.highlights.map((h) => ({ s: h.start, e: h.end })),
+    })}`
+  })
+
   return (
     <div class={cn(props.class, 'flex flex-col')}>
       <div class="relative flex-1">
@@ -210,6 +217,11 @@ const Highlights = (props: { class?: string }) => {
         <div class={cn('grid h-full place-items-center', !a.loading() && 'hidden')}>
           <Logo class="size-48" spin />
         </div>
+      </div>
+      <div class="px-4 py-2">
+        <Button class="w-full" href={downloadLink()} disabled={!options()?.length}>
+          Download Highlights
+        </Button>
       </div>
     </div>
   )

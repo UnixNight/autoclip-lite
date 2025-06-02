@@ -352,3 +352,89 @@ export async function TwitchUserThirdPartyEmotes(channelID: string) {
 
   return r
 }
+
+export async function TwitchCDNNauth(videoID: string) {
+  const r = await apiFetch(
+    cachedFetch(`https://gql.twitch.tv/gql`, {
+      method: 'POST',
+      headers: gqlHeaders,
+      body: JSON.stringify({
+        operationName: 'PlaybackAccessToken',
+        variables: {
+          isLive: false,
+          login: '',
+          isVod: true,
+          vodID: videoID, // This is the only not-hardcoded variable
+          playerType: 'channel_home_live',
+        },
+        extensions: {
+          persistedQuery: {
+            version: 1,
+            sha256Hash: '0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712',
+          },
+        },
+      }),
+    }),
+    z.object({
+      data: z.object({
+        videoPlaybackAccessToken: z.object({
+          value: z.string(),
+          signature: z.string(),
+        }),
+      }),
+    }),
+  )
+  return r.data.videoPlaybackAccessToken
+}
+
+export async function TwitchCDNMasterPlaylist(
+  videoID: string,
+  nauth: { value: string; signature: string },
+) {
+  const r = await fetch(
+    `https://usher.ttvnw.net/vod/${videoID}.m3u8?${new URLSearchParams({
+      nauth: nauth.value,
+      nauthsig: nauth.signature,
+      allow_source: 'true',
+      allow_spectre: 'true',
+      allow_audio_only: 'true',
+      player: 'twitchweb',
+    })}`,
+  )
+  const b = await r.text()
+  if (r.status !== 200) {
+    throw new Error('invalid master playlist status code')
+  }
+
+  // Return the first url we find and hope it's the source quality
+  const url = b.split('\n').find((l) => !l.startsWith('#'))
+  if (!url) {
+    throw new Error('could not find media playlist url in master playlist')
+  }
+
+  return url
+}
+
+export async function TwitchCDNMediaPlaylist(url: string, highlights: { s: number; e: number }[]) {
+  const r = await fetch(url)
+  const b = await r.text()
+  if (r.status !== 200) {
+    throw new Error('invalid media playlist status code')
+  }
+
+  let start = 0
+  return b.split('\n').flatMap((l, idx, arr) => {
+    if (l.startsWith('#')) {
+      return []
+    }
+
+    const duration = Number(/#EXTINF:([\d\.]+),/.exec(arr[idx - 1]!)?.[1])
+    const end = start + duration
+    const include = highlights.some(
+      (h) => (h.s - 20 <= start && start <= h.e + 20) || (h.s - 20 <= end && end <= h.e + 20),
+    )
+
+    start = end
+    return include ? [new URL(l, url).href] : []
+  })
+}
