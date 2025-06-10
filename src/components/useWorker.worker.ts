@@ -1,4 +1,4 @@
-import { workerLib } from '~/server/workerlib'
+import { workerLib } from '../server/workerlib'
 import type { ApiChart, ApiEmote, ApiHighlight, ApiMeta } from './types'
 
 export default workerLib.create({
